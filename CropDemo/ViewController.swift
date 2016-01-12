@@ -103,8 +103,13 @@ class CropViewController:UIViewController {
     }
     
     func addImage(){
-        let scrollF = CGRect.init(x: 0, y:  -0.5 * (screenH - cropH), width: screenW, height: screenH)
-        let scrollView = UIScrollView.init(frame: scrollF)
+        let scrollView = UIScrollView.init()
+        scrollView.bounds = UIScreen.mainScreen().bounds
+        scrollView.center = view.center
+        var fr = scrollView.frame
+        fr.origin.y -= cropView!.frame.minY
+        scrollView.frame = fr
+        print(fr)
         self.scrollView = scrollView
         scrollView.contentSize = CGSize.init(width: screenW * 15, height: screenH * 15)
         scrollView.maximumZoomScale = 5.0
@@ -119,15 +124,13 @@ class CropViewController:UIViewController {
             let size = image!.size
             let imageView = UIImageView.init(image: image)
             self.imageView = imageView
-            var ivFrame:CGRect
 
-            let x = 0 as CGFloat
             let w = screenW
             let h = screenW / size.width * size.height
-            let y = 0.5 * (screenH - h)
-            ivFrame = CGRect.init(x: x, y: y, width: w, height: h)
             
-            imageView.frame = ivFrame
+            imageView.bounds = CGRect.init(x: 0, y: 0, width: w, height: h)
+            imageView.center = cropView!.center
+            
             scrollView.addSubview(imageView)
         }
         
