@@ -55,6 +55,9 @@ class CropViewController:UIViewController {
     let screenH = UIScreen.mainScreen().bounds.size.height
     let screenW = UIScreen.mainScreen().bounds.size.width
     
+    let cropW = 305 as CGFloat
+    let cropH = 106 as CGFloat
+    
     var cropView:UIView?
     var imageView:UIImageView?
     var scrollView:UIScrollView?
@@ -84,14 +87,14 @@ class CropViewController:UIViewController {
         let x1 = 0 as CGFloat
         let y1 = 0 as CGFloat
         let w1 = screenW
-        let h1 = 0.25 * screenH
+        let h1 = cropView!.frame.origin.y
         let topShadow = UIView.init(frame: CGRect.init(x: x1, y: y1, width: w1, height: h1))
         topShadow.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
         
         let x2 = 0 as CGFloat
-        let y2 = 0.75 * screenH
+        let y2 = h1 + cropView!.frame.size.height
         let w2 = screenW
-        let h2 = 0.25 * screenH
+        let h2 = screenH - y2
         let bottomShadow = UIView.init(frame: CGRect.init(x: x2, y: y2, width: w2, height: h2))
         bottomShadow.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
         
@@ -100,10 +103,10 @@ class CropViewController:UIViewController {
     }
     
     func addImage(){
-        let scrollF = CGRect.init(x: 0, y: 0 - 0.25 * screenH, width: screenW, height: screenH)
+        let scrollF = CGRect.init(x: 0, y:  -0.5 * (screenH - cropH), width: screenW, height: screenH)
         let scrollView = UIScrollView.init(frame: scrollF)
         self.scrollView = scrollView
-        scrollView.contentSize = CGSize.init(width: screenW * 5, height: screenH * 5)
+        scrollView.contentSize = CGSize.init(width: screenW * 15, height: screenH * 15)
         scrollView.maximumZoomScale = 5.0
         scrollView.minimumZoomScale = 1.0
         scrollView.showsHorizontalScrollIndicator = false
@@ -133,9 +136,10 @@ class CropViewController:UIViewController {
     func addCropFrameView(){
         //画线
         let cX = 0 as CGFloat
-        let cH = screenH * 0.5
-        let cY = 0.5 * (screenH - cH)
         let cW = screenW
+        // cH / cW = cropH / cropW
+        let cH = cropH / cropW * cW
+        let cY = 0.5 * (screenH - cH)
         
         let cropView = UIView.init(frame: CGRect.init(x: cX, y: cY, width: cW, height: cH))
         cropView.backgroundColor = UIColor.blackColor()
